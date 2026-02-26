@@ -1,38 +1,74 @@
 body{
-    font-family: Arial, sans-serif;
-    background:#0f172a;
+    background:linear-gradient(#0f172a,#020617);
     color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    font-family:Arial;
+    text-align:center;
     margin:0;
 }
 
-.game{
-    background:#1e293b;
-    padding:25px;
+#ui{
+    margin-top:10px;
+    font-size:18px;
+}
+
+#game{
+    width:360px;
+    height:520px;
+    margin:20px auto;
+    position:relative;
+    overflow:hidden;
     border-radius:14px;
-    width:320px;
-    text-align:center;
-    box-shadow:0 0 20px rgba(0,0,0,.6);
+    background:linear-gradient(#1e293b,#020617);
+    box-shadow:0 0 30px black;
 }
 
-button{
-    width:100%;
-    padding:10px;
-    margin:8px 0;
-    border:none;
-    border-radius:8px;
-    background:#334155;
-    color:white;
-    cursor:pointer;
+/* PLAYER */
+#player{
+    width:40px;
+    height:40px;
+    background:#22c55e;
+    position:absolute;
+    bottom:10px;
+    left:160px;
+    border-radius:10px;
+    transition:transform .1s;
 }
 
-button:hover{
-    background:#475569;
+/* TEACHER */
+#teacher{
+    width:50px;
+    height:50px;
+    background:#ef4444;
+    position:absolute;
+    top:10px;
+    left:150px;
+    border-radius:10px;
+    animation:teacherMove 2s infinite alternate;
 }
 
-hr{
-    border:1px solid #334155;
+@keyframes teacherMove{
+    from{left:20px;}
+    to{left:290px;}
+}
+
+/* PAPER */
+.paper{
+    width:28px;
+    height:28px;
+    background:#facc15;
+    position:absolute;
+    border-radius:4px;
+}
+
+/* SHAKE EFFECT */
+.shake{
+    animation:shake .3s;
+}
+
+@keyframes shake{
+0%{transform:translate(0)}
+25%{transform:translate(5px)}
+50%{transform:translate(-5px)}
+75%{transform:translate(5px)}
+100%{transform:translate(0)}
 }
