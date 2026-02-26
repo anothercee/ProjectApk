@@ -3,18 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detektif Sekolah</title>
-
+<title>Idle Ekskul Manager</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="game">
-    <h1>🕵️ Detektif Sekolah</h1>
-    <p id="story"></p>
-    <div id="choices"></div>
-    <div id="inventory"></div>
+<div class="game">
+    <h1>🏫 Bangun Ekskul</h1>
+
+    <h2>💰 Dana: <span id="money">0</span></h2>
+    <p>📈 Income/detik: <span id="income">1</span></p>
+
+    <button id="workBtn">Cari Dana</button>
+
+    <hr>
+
+    <h3>Anggota Ekskul</h3>
+    <p>Total: <span id="members">0</span></p>
+    <button id="recruitBtn">Rekrut Anggota (50)</button>
+
+    <h3>Upgrade Ekskul</h3>
+    <button id="upgradeBtn">Upgrade Latihan (100)</button>
+
 </div>
 
 <script src="script.js"></script>
