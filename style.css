@@ -2,52 +2,37 @@ body{
     font-family: Arial, sans-serif;
     background:#0f172a;
     color:white;
-    margin:0;
-    height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
+    height:100vh;
+    margin:0;
 }
 
-#game{
-    width:380px;
+.game{
     background:#1e293b;
-    padding:20px;
+    padding:25px;
     border-radius:14px;
-    box-shadow:0 0 25px rgba(0,0,0,0.6);
-}
-
-h1{
+    width:320px;
     text-align:center;
-    margin-top:0;
-}
-
-#story{
-    margin:15px 0;
-    line-height:1.5;
+    box-shadow:0 0 20px rgba(0,0,0,.6);
 }
 
 button{
     width:100%;
     padding:10px;
-    margin:6px 0;
+    margin:8px 0;
     border:none;
     border-radius:8px;
     background:#334155;
     color:white;
     cursor:pointer;
-    transition:.2s;
 }
 
 button:hover{
     background:#475569;
-    transform:scale(1.03);
 }
 
-#inventory{
-    margin-top:15px;
-    font-size:13px;
-    color:#cbd5e1;
-    border-top:1px solid #475569;
-    padding-top:10px;
+hr{
+    border:1px solid #334155;
 }
