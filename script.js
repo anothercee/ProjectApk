@@ -1,128 +1,112 @@
-let game = {
-    money: 0,
-    income: 1,
-    members: 0,
-    level: 1,
-    exp: 0
-};
+const game = document.getElementById("game");
+const player = document.getElementById("player");
+const teacher = document.getElementById("teacher");
 
-/* ===== SOUND ===== */
-const clickSound = new Audio(
-"https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"
-);
+const scoreEl = document.getElementById("score");
+const lifeEl = document.getElementById("life");
 
-function playSound(){
-    clickSound.currentTime = 0;
-    clickSound.play();
+let playerX = 160;
+let score = 0;
+let life = 3;
+let papers = [];
+let gameOver = false;
+
+/* ===== GERAK PLAYER ===== */
+document.addEventListener("keydown", e=>{
+    if(e.key==="ArrowLeft") playerX -= 25;
+    if(e.key==="ArrowRight") playerX += 25;
+});
+
+/* TOUCH CONTROL */
+game.addEventListener("touchstart", e=>{
+    const x = e.touches[0].clientX;
+    if(x < window.innerWidth/2) playerX -= 30;
+    else playerX += 30;
+});
+
+/* ===== SPAWN DARI GURU ===== */
+function spawnPaper(){
+
+    const teacherRect = teacher.getBoundingClientRect();
+    const gameRect = game.getBoundingClientRect();
+
+    const paper = document.createElement("div");
+    paper.className="paper";
+
+    const startX = teacherRect.left - gameRect.left + 10;
+
+    paper.style.left = startX+"px";
+    game.appendChild(paper);
+
+    papers.push({
+        el:paper,
+        y:60,
+        speed:4+Math.random()*2
+    });
 }
 
-/* ===== ELEMENT ===== */
-const moneyEl = document.getElementById("money");
-const incomeEl = document.getElementById("income");
-const membersEl = document.getElementById("members");
-
-/* TAMBAHAN UI LEVEL */
-const levelUI = document.createElement("p");
-document.querySelector(".game").prepend(levelUI);
-
-/* ===== UPDATE UI ===== */
-function updateUI(){
-    moneyEl.textContent = Math.floor(game.money);
-    incomeEl.textContent = game.income;
-    membersEl.textContent = game.members;
-    levelUI.textContent =
-        `⭐ Level Ekskul: ${game.level} | EXP: ${game.exp}/100`;
-}
-
-/* ===== LEVEL SYSTEM ===== */
-function addExp(amount){
-    game.exp += amount;
-
-    if(game.exp >= 100){
-        game.exp = 0;
-        game.level++;
-        game.income += 2;
-        alert("Ekskul Naik Level! Income meningkat 🔥");
-    }
-}
-
-/* ===== BUTTON ===== */
-document.getElementById("workBtn").onclick = () => {
-    playSound();
-    game.money += 10;
-    addExp(5);
-    updateUI();
-};
-
-document.getElementById("recruitBtn").onclick = () => {
-    playSound();
-
-    if(game.money >= 50){
-        game.money -= 50;
-        game.members++;
-        game.income += 1;
-        addExp(10);
-        updateUI();
-    }
-};
-
-document.getElementById("upgradeBtn").onclick = () => {
-    playSound();
-
-    if(game.money >= 100){
-        game.money -= 100;
-        game.income += 5;
-        addExp(20);
-        updateUI();
-    }
-};
-
-/* ===== TURNAMEN SYSTEM ===== */
-const tournamentBtn = document.createElement("button");
-tournamentBtn.textContent = "🏆 Ikut Turnamen (200)";
-document.querySelector(".game").appendChild(tournamentBtn);
-
-tournamentBtn.onclick = () => {
-    playSound();
-
-    if(game.money >= 200){
-
-        game.money -= 200;
-
-        const winChance = Math.random();
-
-        if(winChance > 0.4){
-            const reward = 300 + game.level * 50;
-            alert("MENANG TURNAMEN! Dapat " + reward);
-            game.money += reward;
-            addExp(40);
-        }else{
-            alert("Kalah turnamen 😭 latihan lagi!");
-            addExp(10);
-        }
-
-        updateUI();
-    }
-};
-
-/* ===== IDLE INCOME ===== */
 setInterval(()=>{
-    game.money += game.income;
-    updateUI();
-    saveGame();
-},1000);
+    if(!gameOver) spawnPaper();
+},900);
 
-/* ===== SAVE SYSTEM ===== */
-function saveGame(){
-    localStorage.setItem("ekskulSave", JSON.stringify(game));
+/* ===== COLLISION ===== */
+function collide(a,b){
+return !(
+a.right<b.left||
+a.left>b.right||
+a.bottom<b.top||
+a.top>b.bottom
+);
 }
 
-function loadGame(){
-    const save = localStorage.getItem("ekskulSave");
-    if(save){
-        game = JSON.parse(save);
+/* ===== HIT EFFECT ===== */
+function hitPlayer(){
+    life--;
+    lifeEl.textContent = life;
+
+    game.classList.add("shake");
+    setTimeout(()=>game.classList.remove("shake"),300);
+
+    if(life<=0){
+        gameOver=true;
+        alert("GAME OVER 😭 Score: "+score);
+        location.reload();
     }
 }
 
-loadGame();
-updateUI();
+/* ===== GAME LOOP ===== */
+function update(){
+
+if(gameOver) return;
+
+playerX=Math.max(0,Math.min(320,playerX));
+player.style.left=playerX+"px";
+
+const playerRect=player.getBoundingClientRect();
+
+papers.forEach((p,i)=>{
+
+    p.y+=p.speed;
+    p.el.style.top=p.y+"px";
+
+    const paperRect=p.el.getBoundingClientRect();
+
+    if(collide(playerRect,paperRect)){
+        p.el.remove();
+        papers.splice(i,1);
+        hitPlayer();
+        return;
+    }
+
+    if(p.y>540){
+        p.el.remove();
+        papers.splice(i,1);
+        score++;
+        scoreEl.textContent=score;
+    }
+});
+
+requestAnimationFrame(update);
+}
+
+update();
